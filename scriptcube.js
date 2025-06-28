@@ -2,8 +2,8 @@
 // Importing Utilities 
 // 
 import * as THREE from "three";
-import {XRButton} from 'three/addons/webxr/XRButton.js';
-console.log(XRButton);
+import {ARButton} from 'three/addons/webxr/ARButton.js';
+console.log(ARButton);
 
 
 
@@ -61,8 +61,8 @@ renderer.setAnimationLoop(animation);
 // Set up XR
 let setUpXR = () => {
     renderer.xr.enabled = true;
-let xrButton = XRButton.createButton(renderer);
-document.body.appendChild(xrButton);
+let arButton = ARButton.createButton(renderer);
+document.body.appendChild(arButton);
 }
 
 setUpXR();
