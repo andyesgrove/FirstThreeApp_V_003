@@ -1,5 +1,4 @@
-<script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
-<script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/aframe@1.6.0/dist/aframe-master.min.js"></script>
 
 <style>
   .arjs-loader {
@@ -22,34 +21,32 @@
   }
 </style>
 
-<body style="margin : 0px; overflow: hidden;">
-  <!-- minimal loader shown until image descriptors are loaded -->
+<!-- rawgithack development URL -->
+<!--<script src='https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js'></script>-->
+<script src='../../../../aframe/build/aframe-ar-nft.js'></script>
+
+
+<body style='margin : 0px; overflow: hidden;'>
+   <!-- minimal loader shown until image descriptors are loaded -->
   <div class="arjs-loader">
     <div>Loading, please wait...</div>
   </div>
-  <a-scene
-    vr-mode-ui="enabled: false;"
-    renderer="logarithmicDepthBuffer: true;"
-    embedded
-    arjs="trackingMethod: best; sourceType: webcam;debugUIEnabled: false;"
-  >
-    <a-nft
-      type="nft"
-      
-      url="https://raw.githubusercontent.com/andyesgrove/FirstThreeApp_V_003/5f7a19acf4c8cfff7e32f0e91b7a49a6bb5c96ba/Whyteleafelogo.png"
+    <a-scene
+        vr-mode-ui='enabled: false;'
+        renderer="logarithmicDepthBuffer: true; precision: medium;"
+        embedded arjs='trackingMethod: best; sourceType: webcam; debugUIEnabled: false;'>
 
-      smooth="true"
-      smoothcount="10"
-      smoothtolerance=".01"
-      smooththreshold="5"
-    >
-      <a-entity
-        gltf-model="https://raw.githack.com/AR-js-org/AR.js/master/aframe/examples/image-tracking/nft/trex/scene.gltf"
-        scale="5 5 5"
-        position="0 0 -100"
-      >
-      </a-entity>
-    </a-nft>
-    <a-entity camera></a-entity>
-  </a-scene>
+        <!-- use rawgithack to retrieve the correct url for nft marker (see 'pinball' below) -->
+        <a-nft
+            type='nft' url='./aframe/examples/image-tracking/nft/trex/trex-image/trex'
+            smooth='true' smoothcount='10' smoothtolerance='0.01' smooththreshold='5'>
+            <a-entity
+                gltf-model='./trex/scene.gltf'
+                scale="5 5 5"
+                position="150 300 -100"
+                >
+            </a-entity>
+        </a-nft>
+        <a-entity camera></a-entity>
+    </a-scene>
 </body>
