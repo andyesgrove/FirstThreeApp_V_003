@@ -56,10 +56,10 @@
   
   <div class="instructions">
     <strong>Instructions:</strong><br>
-    1. Print the Whyteleafe marker pattern<br>
-    2. Point your camera at the printed marker<br>
-    3. Keep the marker flat and well-lit<br>
-    <small>(Much more stable than image tracking!)</small>
+    1. Allow camera access when prompted<br>
+    2. Print the Whyteleafe marker pattern<br>
+    3. Point your camera at the printed marker<br>
+    4. Keep the marker flat and well-lit
   </div>
   
   <a-scene
@@ -67,6 +67,7 @@
     renderer="logarithmicDepthBuffer: true; precision: medium;"
     embedded
     arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
+    loading-screen="enabled: false;"
   >
     <!-- Custom Whyteleafe Marker -->
     <a-marker
@@ -86,5 +87,25 @@
     
     <a-entity camera></a-entity>
   </a-scene>
+
+  <script>
+    // Remove loading screen when AR is ready
+    window.addEventListener('load', function () {
+      setTimeout(function() {
+        const loader = document.querySelector('.arjs-loader');
+        if (loader) {
+          loader.style.display = 'none';
+        }
+      }, 3000);
+    });
+
+    // Also remove on camera-init event
+    document.querySelector('a-scene').addEventListener('loaded', function() {
+      const loader = document.querySelector('.arjs-loader');
+      if (loader) {
+        loader.style.display = 'none';
+      }
+    });
+  </script>
 </body>
 </html>
