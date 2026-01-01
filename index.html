@@ -4,34 +4,31 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AR Custom Marker Tracking</title>
+  <title>MindAR Image Tracking</title>
   
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
   <script src="https://cdn.jsdelivr.net/gh/aframevr/aframe@1c2407b26c61958baa93967b5412487cd94b290b/dist/aframe-master.min.js"></script>
-  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   
   <style>
     body {
       margin: 0;
       overflow: hidden;
+      font-family: Arial, sans-serif;
     }
     
-    .arjs-loader {
-      height: 100%;
-      width: 100%;
-      position: absolute;
+    .loading {
+      position: fixed;
       top: 0;
       left: 0;
-      background-color: rgba(0, 0, 0, 0.8);
-      z-index: 9999;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
       display: flex;
       justify-content: center;
       align-items: center;
-    }
-    
-    .arjs-loader div {
-      text-align: center;
-      font-size: 1.25em;
+      z-index: 9999;
       color: white;
+      font-size: 1.2em;
     }
     
     .instructions {
@@ -42,79 +39,69 @@
       color: white;
       padding: 15px;
       border-radius: 5px;
-      font-family: Arial, sans-serif;
       font-size: 14px;
       z-index: 1000;
       max-width: 320px;
     }
+
+    .instructions a {
+      color: #4CAF50;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
-  <div class="arjs-loader">
-    <div>Loading AR experience, please wait...</div>
+  <div class="loading" id="loading">
+    <div>Loading AR, please wait...</div>
   </div>
   
   <div class="instructions">
-    <strong>Instructions:</strong><br>
-    1. Allow camera access when prompted<br>
-    2. Print the Whyteleafe marker pattern<br>
-    3. Point your camera at the printed marker<br>
-    4. Keep the marker flat and well-lit
+    <strong>Setup Required:</strong><br>
+    1. You need to compile your logo into a .mind file<br>
+    2. Visit: <a href="https://hiukim.github.io/mind-ar-js-doc/tools/compile" target="_blank">MindAR Compiler</a><br>
+    3. Upload your Whyteleafelogo.png<br>
+    4. Download the generated .mind file<br>
+    5. Upload it to your GitHub repo<br>
+    <br>
+    <strong>Note:</strong> This method is MUCH more stable than NFT!
   </div>
   
   <a-scene
+    mindar-image="imageTargetSrc: https://raw.githubusercontent.com/andyesgrove/FirstThreeApp_V_003/main/targets.mind; filterMinCF:0.0001; filterBeta: 0.01"
+    color-space="sRGB"
+    renderer="colorManagement: true, physicallyCorrectLights"
     vr-mode-ui="enabled: false"
-    renderer="logarithmicDepthBuffer: true; precision: medium;"
-    embedded
-    arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
-    loading-screen="enabled: false;"
+    device-orientation-permission-ui="enabled: false"
   >
-    <!-- Custom Whyteleafe Marker -->
-    <a-marker
-      type="pattern"
-      url="https://raw.githubusercontent.com/andyesgrove/FirstThreeApp_V_003/main/pattern-Whyteleafelogo.patt"
-    >
-      <!-- Test box to verify tracking -->
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+    
+    <!-- Target 0 is your first/only image -->
+    <a-entity mindar-image-target="targetIndex: 0">
+      <!-- Green test box -->
       <a-box
-        position="0 0.5 0"
+        position="0 0 0.5"
         color="#00FF00"
         width="0.5"
         height="0.5"
         depth="0.5"
       ></a-box>
       
-      <!-- 3D Text - Full width of marker -->
+      <!-- 3D Text -->
       <a-text
         value="NEXT FIXTURE"
         color="#FF0000"
         align="center"
-        width="2"
+        width="1.5"
         position="0 0 0"
-        rotation="-90 0 0"
-        scale="1.5 1.5 1.5"
+        scale="1 1 1"
       ></a-text>
-    </a-marker>
-    
-    <a-entity camera></a-entity>
+    </a-entity>
   </a-scene>
 
   <script>
-    // Remove loading screen when AR is ready
-    window.addEventListener('load', function () {
-      setTimeout(function() {
-        const loader = document.querySelector('.arjs-loader');
-        if (loader) {
-          loader.style.display = 'none';
-        }
-      }, 3000);
-    });
-
-    // Also remove on camera-init event
-    document.querySelector('a-scene').addEventListener('loaded', function() {
-      const loader = document.querySelector('.arjs-loader');
-      if (loader) {
-        loader.style.display = 'none';
-      }
+    const sceneEl = document.querySelector('a-scene');
+    sceneEl.addEventListener('loaded', function() {
+      document.getElementById('loading').style.display = 'none';
     });
   </script>
 </body>
