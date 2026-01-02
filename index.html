@@ -51,6 +51,7 @@
             const teamId = teamData.response[0].team.id;
             
             // Fetch next fixture for the team
+            const url = 'https://corsproxy.io/?' + encodeURIComponent('https://v3.football.api-sports.io/...');
             const fixtureResponse = await fetch(`https://v3.football.api-sports.io/fixtures?team=${teamId}&next=1`, {
               method: 'GET',
               headers: {
