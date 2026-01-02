@@ -37,12 +37,15 @@
       // Fetch fixture data when the scene loads
       document.addEventListener('DOMContentLoaded', async function() {
         try {
-          // API-Football endpoint for AFC Whyteleafe
-          // First, we need to find the team ID for AFC Whyteleafe
-          const teamResponse = await fetch('https://v3.football.api-sports.io/teams?search=Whyteleafe', {
+          // API-Football endpoint for AFC Whyteleafe with CORS proxy
+          const apiKey = '0701bd3205c7307d5803ff8615b300b5';
+          
+          // First, find the team ID for AFC Whyteleafe
+          const teamUrl = 'https://v3.football.api-sports.io/teams?search=Whyteleafe';
+          const teamResponse = await fetch('https://corsproxy.io/?' + encodeURIComponent(teamUrl), {
             method: 'GET',
             headers: {
-              'x-apisports-key': '0701bd3205c7307d5803ff8615b300b5'
+              'x-apisports-key': apiKey
             }
           });
           const teamData = await teamResponse.json();
@@ -51,11 +54,11 @@
             const teamId = teamData.response[0].team.id;
             
             // Fetch next fixture for the team
-            const url = 'https://corsproxy.io/?' + encodeURIComponent('https://v3.football.api-sports.io/...');
-            const fixtureResponse = await fetch(`https://v3.football.api-sports.io/fixtures?team=${teamId}&next=1`, {
+            const fixtureUrl = `https://v3.football.api-sports.io/fixtures?team=${teamId}&next=1`;
+            const fixtureResponse = await fetch('https://corsproxy.io/?' + encodeURIComponent(fixtureUrl), {
               method: 'GET',
               headers: {
-                'x-apisports-key': '0701bd3205c7307d5803ff8615b300b5'
+                'x-apisports-key': apiKey
               }
             });
             const fixtureData = await fixtureResponse.json();
