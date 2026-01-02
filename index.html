@@ -38,9 +38,12 @@
 <body style="margin: 0; overflow: hidden;">
   
   <div class="instructions">
-    <strong>Instructions:</strong><br>
-    Point your camera at the Whyteleafe logo marker<br>
-    <small>(The pattern image with black border that was generated with your .patt file)</small>
+    <strong>Quick Test:</strong><br>
+    1. Download marker: <a href="https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/images/hiro.png" target="_blank">Hiro Marker</a><br>
+    2. Print it<br>
+    3. Point camera at it<br>
+    <br>
+    <small>Once this works, we'll switch to your logo marker</small>
   </div>
   
   <a-scene
@@ -48,11 +51,8 @@
     arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
     vr-mode-ui="enabled: false"
   >
-    <!-- Custom Whyteleafe Pattern Marker with Border -->
-    <a-marker
-      type="pattern"
-      url="https://raw.githubusercontent.com/andyesgrove/FirstThreeApp_V_003/main/pattern-WhyteleafelogoBorder.patt"
-    >
+    <!-- Using Hiro for testing - works reliably on iOS -->
+    <a-marker preset="hiro">
       <!-- Green test box -->
       <a-box
         position="0 0.5 0"
