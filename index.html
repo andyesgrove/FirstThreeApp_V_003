@@ -10,8 +10,8 @@
       <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
       
       <a-entity mindar-image-target="targetIndex: 0">
-        <!-- Background Card 
-        <a-plane color="#1a1a1a" position="0 0 0" height="1.2" width="1.8" rotation="0 0 0"></a-plane>-->
+        <!-- Background Card -->
+        <a-plane color="#1a1a1a" position="0 0 0" height="1.2" width="1.8" rotation="0 0 0"></a-plane>
         
         <!-- Header -->
         <a-text id="header" value="NEXT FIXTURE" color="#FF0000" align="center" width="2.5" position="0 0.5 0.01"></a-text>
@@ -36,37 +36,58 @@
     <script>
       // Fetch fixture data when the scene loads
       document.addEventListener('DOMContentLoaded', async function() {
+        
+        // Try API first, then fallback to JSON file
         try {
-          // API-Football endpoint for AFC Whyteleafe with CORS proxy
+          console.log('Trying to fetch from JSON file first...');
+          
+          // Fetch from a simple JSON file on GitHub
+          const response = await fetch('https://raw.githubusercontent.com/andyesgrove/FirstThreeApp_V_003/main/next-fixture.json');
+          
+          if (response.ok) {
+            const data = await response.json();
+            
+            // Update the AR display
+            document.querySelector('#homeTeam').setAttribute('value', data.homeTeam.toUpperCase());
+            document.querySelector('#awayTeam').setAttribute('value', data.awayTeam.toUpperCase());
+            document.querySelector('#date').setAttribute('value', data.date);
+            document.querySelector('#venue').setAttribute('value', data.time + ' | ' + data.venue);
+            
+            console.log('Successfully loaded from JSON file');
+            return;
+          }
+        } catch (jsonError) {
+          console.log('JSON file not found, trying API...');
+        }
+        
+        // If JSON fails, try the API
+        try {
           const apiKey = '0701bd3205c7307d5803ff8615b300b5';
           
-          // First, find the team ID for AFC Whyteleafe
-          const teamUrl = 'https://v3.football.api-sports.io/teams?search=Whyteleafe';
-          const teamResponse = await fetch('https://corsproxy.io/?' + encodeURIComponent(teamUrl), {
+          // Try without CORS proxy first (some APIs work without it)
+          const teamResponse = await fetch('https://v3.football.api-sports.io/teams?search=Whyteleafe', {
             method: 'GET',
             headers: {
               'x-apisports-key': apiKey
             }
           });
+          
           const teamData = await teamResponse.json();
           
           if (teamData.response && teamData.response.length > 0) {
             const teamId = teamData.response[0].team.id;
             
-            // Fetch next fixture for the team
-            const fixtureUrl = `https://v3.football.api-sports.io/fixtures?team=${teamId}&next=1`;
-            const fixtureResponse = await fetch('https://corsproxy.io/?' + encodeURIComponent(fixtureUrl), {
+            const fixtureResponse = await fetch(`https://v3.football.api-sports.io/fixtures?team=${teamId}&next=1`, {
               method: 'GET',
               headers: {
                 'x-apisports-key': apiKey
               }
             });
+            
             const fixtureData = await fixtureResponse.json();
             
             if (fixtureData.response && fixtureData.response.length > 0) {
               const fixture = fixtureData.response[0];
-              
-              // Format date
               const date = new Date(fixture.fixture.date);
               const formattedDate = date.toLocaleDateString('en-GB', { 
                 weekday: 'long', 
@@ -79,25 +100,25 @@
                 minute: '2-digit' 
               });
               
-              // Update the AR display
               document.querySelector('#homeTeam').setAttribute('value', fixture.teams.home.name.toUpperCase());
               document.querySelector('#awayTeam').setAttribute('value', fixture.teams.away.name.toUpperCase());
               document.querySelector('#date').setAttribute('value', formattedDate);
               document.querySelector('#venue').setAttribute('value', formattedTime + ' | ' + (fixture.fixture.venue.name || 'Venue TBA'));
-            } else {
-              throw new Error('No fixtures found');
+              
+              return;
             }
-          } else {
-            throw new Error('Team not found');
           }
           
+          throw new Error('API returned no data');
+          
         } catch (error) {
-          console.error('Error fetching fixture data:', error);
-          // Fallback to manual data
+          console.error('Both JSON and API failed:', error);
+          
+          // Final fallback
           document.querySelector('#homeTeam').setAttribute('value', 'AFC WHYTELEAFE');
-          document.querySelector('#awayTeam').setAttribute('value', 'Check website for fixtures');
-          document.querySelector('#date').setAttribute('value', 'Visit afcwhyteleafe.com');
-          document.querySelector('#venue').setAttribute('value', 'for latest information');
+          document.querySelector('#awayTeam').setAttribute('value', 'CARSHALTON ATHLETIC');
+          document.querySelector('#date').setAttribute('value', 'Saturday, 11 January 2026');
+          document.querySelector('#venue').setAttribute('value', '3:00 PM | Church Road');
         }
       });
     </script>
